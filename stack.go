@@ -1,40 +1,50 @@
 package main
 
-type Stacker interface {
-	add(element int)
-	delete()
-	getFirst() int
+//implmentación de stack
+type (
+	Stack struct {
+		top    *node
+		length int
+	}
+	node struct {
+		value interface{}
+		prev  *node
+	}
+)
+
+// Create a new stack
+func New() *Stack {
+	return &Stack{nil, 0}
 }
 
-type Node struct {
-	value    int
-	NextNode *Node
+// Return the number of items in the stack
+func (this *Stack) Len() int {
+	return this.length
 }
 
-type Stack struct {
-	firstNode *Node
-	size      int
+// View the top item on the stack
+func (this *Stack) Peek() interface{} {
+	if this.length == 0 {
+		return nil
+	}
+	return this.top.value
 }
 
-//Add method
-func (s *Stack) add(element int) {
-	s.firstNode = &Node{
-		value:    element,
-		NextNode: s.firstNode,
+// Pop the top item of the stack and return it
+func (this *Stack) Pop() interface{} {
+	if this.length == 0 {
+		return nil
 	}
 
-	s.size++
+	n := this.top
+	this.top = n.prev
+	this.length--
+	return n.value
 }
 
-func (s *Stack) delete(position int) {
-	s.firstNode = s.firstNode.NextNode
-	s.size--
-}
-
-func (s *Stack) getFirst() int {
-	return s.firstNode.value
-}
-
-func (s *Stack) getSize() int {
-	return s.size
+// Push a value onto the top of the stack
+func (this *Stack) Push(value interface{}) {
+	n := &node{value, this.top}
+	this.top = n
+	this.length++
 }
